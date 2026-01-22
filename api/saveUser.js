@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import fetch from 'node-fetch';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
