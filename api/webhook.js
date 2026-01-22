@@ -1,29 +1,20 @@
 import { saveUser } from "./saveUser.js";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).end("Method Not Allowed");
-  }
+  if (req.method !== "POST") return res.status(405).end();
 
-  const update = req.body;
-  const message = update.message;
+  const msg = req.body.message;
+  if (!msg) return res.status(200).end();
 
-  if (!message || !message.from) {
-    return res.status(200).json({ ok: true });
-  }
-
-  const user = message.from;
-  const chatId = message.chat.id;
-
-  const photoUrl = https://t.me/i/userpic/320/${chatId}.jpg;
+  const user = msg.from;
+  const chatId = msg.chat.id;
 
   await saveUser({
     telegramId: chatId,
-    firstName: user.first_name || "",
-    lastName: user.last_name || "",
-    username: user.username || "",
-    photo: photoUrl,
-    userAgent: message.from.is_bot ? "telegram-bot" : "telegram-client"
+    firstName: user.first_name,
+    lastName: user.last_name,
+    username: user.username,
+    photo: https://t.me/i/userpic/320/${chatId}.jpg
   });
 
   const loginUrl = https://${req.headers.host}/login.html?id=${chatId};
@@ -33,9 +24,9 @@ export default async function handler(req, res) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: chatId,
-      text: ✅ Login ready!\n\nClick below:\n${loginUrl}
+      text: ✅ Login successful\n\n${loginUrl}
     })
   });
 
-  res.status(200).json({ success: true });
+  res.json({ ok: true });
     }
